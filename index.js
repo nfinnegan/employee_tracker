@@ -32,23 +32,40 @@ const start = () => {
           "Add Role",
           "Add Department",
           "Add Employee",
+          "Exit",
         ],
       },
     ])
     .then((answers) => {
       console.log(answers);
-      if (answers.queryType === "Find song by artist") {
-        getArtist();
-      } else if (
-        answers.queryType === "Find artist who appears more than once"
-      ) {
-        dupArtist();
-      } else if (answers.queryType === "Find data between an existing range") {
-        inBetween();
-      } else if (answers.queryType === "Search for specific song") {
-        searchSong();
-      } else {
-        return;
+      switch (answers.queryType) {
+        case "View All Employees":
+          viewAllEmp();
+          break;
+        case "View All Departments":
+          viewAllDept();
+          break;
+        case "View All Roles":
+          viewAllRoles();
+          break;
+        case "Update Employee Role":
+          updateRole();
+          break;
+        case "Add Role":
+          addRole();
+          break;
+        case "Add Department":
+          addDept();
+          break;
+        case "Add Employee":
+          addEmp();
+          break;
+        case "Exit":
+          connection.end();
+          break;
+        default:
+          console.log(`Invalid action: ${answer.queryType}`);
+          break;
       }
     });
 };
@@ -83,33 +100,5 @@ const getArtist = () => {
 connection.connect((err) => {
   if (err) throw err;
   console.log(`connected as id ${connection.threadId}\n`);
-  //  start();
+  start();
 });
-
-//   .then((answer) => {
-//     switch (answer.action) {
-//       case 'Find songs by artist':
-//         artistSearch();
-//         break;
-
-//       case 'Find all artists who appear more than once':
-//         multiSearch();
-//         break;
-
-//       case 'Find data within a specific range':
-//         rangeSearch();
-//         break;
-
-//       case 'Search for a specific song':
-//         songSearch();
-//         break;
-
-//       case 'Exit':
-//         connection.end();
-//         break;
-
-//       default:
-//         console.log(`Invalid action: ${answer.action}`);
-//         break;
-//     }
-//   });
