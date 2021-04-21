@@ -46,8 +46,8 @@ const start = () => {
         case "View All Employees by Department":
           viewAllEmpByDept();
           break;
-        case "View All Roles":
-          viewAllRoles();
+        case "View All Employees by Role":
+          viewAllEmpByRoles();
           break;
         case "Update Employee Role":
           updateRole();
@@ -85,7 +85,19 @@ const viewAllEmp = () => {
 
 const viewAllEmpByDept = () => {
   connection.query(
-    "SELECT employees.id, employees.first_name, employees.last_name, department.dept_name FROM employees JOIN department USING (id)",
+    "SELECT employees.id, employees.first_name, employees.last_name, department.dept_name AS department FROM employees JOIN department USING (id)",
+    (err, res) => {
+      if (err) throw err;
+      // Log all results of the SELECT statement
+      console.table(res);
+      start();
+    }
+  );
+};
+
+const viewAllEmpByRoles = () => {
+  connection.query(
+    "SELECT employees.id, employees.first_name, employees.last_name, roles.title AS role, roles.salary FROM employees JOIN roles USING (id)",
     (err, res) => {
       if (err) throw err;
       // Log all results of the SELECT statement
