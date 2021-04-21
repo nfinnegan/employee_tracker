@@ -27,8 +27,8 @@ const start = () => {
         name: "queryType",
         choices: [
           "View All Employees",
-          "View All Departments",
-          "View All Roles",
+          "View All Employees by Department",
+          "View All Employees by Role",
           "Update Employee Role",
           "Add Role",
           "Add Department",
@@ -71,30 +71,13 @@ const start = () => {
     });
 };
 
-const getArtist = () => {
-  inquirer
-    .prompt([
-      {
-        type: "input",
-        name: "artist",
-        message: "What artist would you like to search?",
-      },
-    ])
-    .then((data) => {
-      console.log(data);
-      connection.query(
-        "SELECT * FROM Top5000 WHERE ?",
-        {
-          artist: data.artist,
-        },
-        (err, res) => {
-          if (err) throw err;
-          // Log all results of the SELECT statement
-          console.log(res);
-          //connection.end();
-        }
-      );
-    });
+const viewAllEmp = () => {
+  connection.query("SELECT * FROM employees", (err, res) => {
+    if (err) throw err;
+    // Log all results of the SELECT statement
+    console.table(res);
+    start();
+  });
 };
 //console.log("Selecting all songs by artist\n");
 
