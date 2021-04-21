@@ -43,8 +43,8 @@ const start = () => {
         case "View All Employees":
           viewAllEmp();
           break;
-        case "View All Departments":
-          viewAllDept();
+        case "View All Employees by Department":
+          viewAllEmpByDept();
           break;
         case "View All Roles":
           viewAllRoles();
@@ -72,14 +72,28 @@ const start = () => {
 };
 
 const viewAllEmp = () => {
-  connection.query("SELECT * FROM employees", (err, res) => {
-    if (err) throw err;
-    // Log all results of the SELECT statement
-    console.table(res);
-    start();
-  });
+  connection.query(
+    "SELECT employees.id, employees.first_name, employees.last_name, roles.title, department.dept_name, roles.salary FROM employees JOIN department USING (id) JOIN roles USING (id)",
+    (err, res) => {
+      if (err) throw err;
+      // Log all results of the SELECT statement
+      console.table(res);
+      start();
+    }
+  );
 };
-//console.log("Selecting all songs by artist\n");
+
+const viewAllEmpByDept = () => {
+  connection.query(
+    "SELECT employees.id, employees.first_name, employees.last_name, department.dept_name FROM employees JOIN department USING (id)",
+    (err, res) => {
+      if (err) throw err;
+      // Log all results of the SELECT statement
+      console.table(res);
+      start();
+    }
+  );
+};
 
 connection.connect((err) => {
   if (err) throw err;
