@@ -1,6 +1,7 @@
 const inquirer = require("inquirer");
 const mysql = require("mysql");
 const consoleTable = require("console.table");
+const pwd = require("./pwd");
 
 // create the connection information for the sql database
 const connection = mysql.createConnection({
@@ -13,7 +14,7 @@ const connection = mysql.createConnection({
   user: "root",
 
   // Your password
-  password: "",
+  password: pwd,
   database: "companyDB",
 });
 
