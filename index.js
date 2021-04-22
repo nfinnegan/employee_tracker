@@ -117,12 +117,18 @@ const viewAllEmpByRoles = () => {
 
 const updateEmpRole = () => {
   const empList = [];
+  const roleList = [];
   connection.query(
-    "SELECT CONCAT(employees.first_name, ' ', employees.last_name) AS full_name, roles.title FROM employees JOIN roles USING (id)",
+    "SELECT CONCAT(employees.first_name, ' ', employees.last_name) AS full_name, roles.title AS role FROM employees JOIN roles USING (id)",
     (err, res) => {
       if (err) throw err;
+      console.table(res);
       res.forEach((employee) => {
         empList.push(employee.full_name);
+      });
+      res.forEach((roles) => {
+        console.log(roles);
+        roleList.push(roles.role);
       });
 
       inquirer
@@ -130,12 +136,18 @@ const updateEmpRole = () => {
           {
             type: "list",
             message: "Which employee needs their role updated?",
-            name: "role",
+            name: "empChoice",
             choices: empList,
+          },
+          {
+            type: "list",
+            message: "Select their new role",
+            name: "role",
+            choices: roleList,
           },
         ])
         .then((answer) => {
-          // console.log(choices);
+          connection.query();
         });
     }
   );
