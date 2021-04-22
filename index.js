@@ -118,25 +118,20 @@ const viewAllEmpByRoles = () => {
 const updateEmpRole = () => {
   const empList = [];
   connection.query(
-    `SELECT employees.first_name + ' ' + employees.last_name AS full_name, roles.title FROM employees 
-    JOIN roles USING (id)`,
+    "SELECT CONCAT(employees.first_name, ' ', employees.last_name) AS full_name, roles.title FROM employees JOIN roles USING (id)",
     (err, res) => {
       if (err) throw err;
-      console.log(res);
       res.forEach((employee) => {
-        empList.push(employee);
-
-        // const { first_name, last_name } = empList;
-        // console.log(empList.first_name, empList.last_name);
+        empList.push(employee.full_name);
       });
-      // console.log(empList);
+
       inquirer
         .prompt([
           {
             type: "list",
             message: "Which employee needs their role updated?",
             name: "role",
-            choices: ["test", "test", empList],
+            choices: empList,
           },
         ])
         .then((answer) => {
