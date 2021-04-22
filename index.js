@@ -73,7 +73,10 @@ const start = () => {
 
 const viewAllEmp = () => {
   connection.query(
-    "SELECT employees.id, employees.first_name, employees.last_name, roles.title, department.dept_name, roles.salary, CONCAT(m.first_name,' ',m.last_name) AS manager FROM employees JOIN department USING (id) JOIN roles USING (id) JOIN employees AS m ON employees.id = m.id",
+    `SELECT employees.id, employees.first_name, employees.last_name, roles.title, department.dept_name, roles.salary, CONCAT(m.first_name,' ',m.last_name) AS manager FROM employees 
+    JOIN department USING (id) 
+    JOIN roles USING (id) 
+    LEFT JOIN employees AS m ON employees.manager_id = m.id`,
     (err, res) => {
       if (err) throw err;
       // Log all results of the SELECT statement
