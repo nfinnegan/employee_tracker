@@ -1,7 +1,7 @@
 USE companyDB;
 
 INSERT INTO employees (first_name, last_name, role_id, manager_id)
-VALUES ("Natalie","Finnegan", 20, 30), ("Amanda", "Wade", 21, 20), ("Pat", "Gale", 22, 31), ("Scott",'Czarnik', 23, 32);
+VALUES ("Natalie","Finnegan", 20, 1), ("Amanda", "Wade", 21, 2), ("Pat", "Gale", 22, 2), ("Scott",'Czarnik', 23, 4);
 
 INSERT INTO department (dept_name)
 VALUES ("Sales"), ("Engineering"), ("Product"), ("Finance"), ("Operations");
