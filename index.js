@@ -2,6 +2,11 @@ const inquirer = require("inquirer");
 const mysql = require("mysql");
 const consoleTable = require("console.table");
 const pwd = require("./pwd");
+// const {
+//   viewAllEmp,
+//   viewAllEmpByDept,
+//   viewAllEmpByRoles,
+// } = require("./main/view");
 
 // create the connection information for the sql database
 const connection = mysql.createConnection({
@@ -29,7 +34,7 @@ const start = () => {
           "View All Employees",
           "View All Employees by Department",
           "View All Employees by Role",
-          "Update Employee Role",
+          "Update Employee's Role",
           "Add Role",
           "Add Department",
           "Add Employee",
@@ -49,8 +54,8 @@ const start = () => {
         case "View All Employees by Role":
           viewAllEmpByRoles();
           break;
-        case "Update Employee Role":
-          updateRole();
+        case "Update Employee's Role":
+          updateEmpRole();
           break;
         case "Add Role":
           addRole();
@@ -73,9 +78,9 @@ const start = () => {
 
 const viewAllEmp = () => {
   connection.query(
-    `SELECT employees.id, employees.first_name, employees.last_name, roles.title, department.dept_name, roles.salary, CONCAT(m.first_name,' ',m.last_name) AS manager FROM employees 
-    JOIN department USING (id) 
-    JOIN roles USING (id) 
+    `SELECT employees.id, employees.first_name, employees.last_name, roles.title, department.dept_name, roles.salary, CONCAT(m.first_name,' ',m.last_name) AS manager FROM employees
+    JOIN department USING (id)
+    JOIN roles USING (id)
     LEFT JOIN employees AS m ON employees.manager_id = m.id`,
     (err, res) => {
       if (err) throw err;
@@ -106,6 +111,37 @@ const viewAllEmpByRoles = () => {
       // Log all results of the SELECT statement
       console.table(res);
       start();
+    }
+  );
+};
+
+const updateEmpRole = () => {
+  const empList = [];
+  connection.query(
+    `SELECT employees.first_name + ' ' + employees.last_name AS full_name, roles.title FROM employees 
+    JOIN roles USING (id)`,
+    (err, res) => {
+      if (err) throw err;
+      console.log(res);
+      res.forEach((employee) => {
+        empList.push(employee);
+
+        // const { first_name, last_name } = empList;
+        // console.log(empList.first_name, empList.last_name);
+      });
+      // console.log(empList);
+      inquirer
+        .prompt([
+          {
+            type: "list",
+            message: "Which employee needs their role updated?",
+            name: "role",
+            choices: ["test", "test", empList],
+          },
+        ])
+        .then((answer) => {
+          // console.log(choices);
+        });
     }
   );
 };
