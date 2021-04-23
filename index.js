@@ -146,12 +146,47 @@ const updateEmpRole = () => {
             choices: roleList,
           },
         ])
-        .then((answer) => {
+        .then((answers) => {
           connection.query();
         });
     }
   );
 };
+
+const addRole = () => {
+  inquirer
+    .prompt([
+      {
+        type: "input",
+        name: "newRole",
+        message: "Please enter the role you'd like to add",
+      },
+      {
+        type: "input",
+        name: "newSal",
+        message: "What is the starting salary for this role?",
+      },
+    ])
+    .then((answer) => {
+      connection.query(
+        "INSERT INTO roles SET ?",
+        {
+          title: answer.newRole,
+          salary: answer.newSal,
+        },
+        (err, res) => {
+          if (err) throw err;
+          console.log(`${answer.newRole} was successfully added`);
+          start();
+        }
+      );
+    });
+};
+
+const addDept = () => {
+    
+}
+
 
 connection.connect((err) => {
   if (err) throw err;
