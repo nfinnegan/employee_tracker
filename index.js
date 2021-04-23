@@ -207,6 +207,43 @@ const addDept = () => {
     });
 };
 
+const addEmp = () => {
+  let mgrQuery = "SELECT * FROM employees";
+  const mgrList = [];
+  connection.query(mgrQuery, (err, res) => {
+    if (err) throw err;
+    res.forEach(({ first_name, last_name }, i) => {
+      i++;
+      mgrList.push(`${first_name} ${last_name}`);
+    });
+
+    inquirer.prompt([
+      {
+        type: "input",
+        name: "empFirstName",
+        message: "What is the employee's first name?",
+      },
+      {
+        type: "input",
+        name: "empLastName",
+        message: "What is the employee's last name?",
+      },
+      {
+        type: "list",
+        name: "empRole",
+        message: "What is the employee's role?",
+        choices: ["test", "test"],
+      },
+      {
+        type: "list",
+        name: "empMgr",
+        message: "Who is the employee's manager?",
+        choices: mgrList,
+      },
+    ]);
+  });
+};
+
 connection.connect((err) => {
   if (err) throw err;
   console.log(`connected as id ${connection.threadId}\n`);
