@@ -184,9 +184,28 @@ const addRole = () => {
 };
 
 const addDept = () => {
-    
-}
-
+  inquirer
+    .prompt([
+      {
+        type: "input",
+        name: "newDept",
+        message: "Please enter the department you'd like to add",
+      },
+    ])
+    .then((answer) => {
+      connection.query(
+        "INSERT INTO department SET ?",
+        {
+          dept_name: answer.newDept,
+        },
+        (err, res) => {
+          if (err) throw err;
+          console.log(`${answer.newDept} was successfully added`);
+          start();
+        }
+      );
+    });
+};
 
 connection.connect((err) => {
   if (err) throw err;
