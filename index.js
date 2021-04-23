@@ -8,7 +8,7 @@ const pwd = require("./pwd");
 //   viewAllEmpByRoles,
 // } = require("./main/view");
 
-// create the connection information for the sql database
+//create the connection information for the sql database
 const connection = mysql.createConnection({
   host: "localhost",
 
@@ -212,17 +212,19 @@ const addEmp = () => {
   const mgrList = [];
   connection.query(mgrQuery, (err, res) => {
     if (err) throw err;
-    res.forEach(({ first_name, last_name }, i) => {
+    res.forEach(({ id, first_name, last_name }, i) => {
       i++;
-      mgrList.push(`${first_name} ${last_name}`);
+      mgrList.push(`${id} ${first_name} ${last_name}`);
     });
-    let roleQuery = "SELECT * FROM roles";
+    let roleQuery =
+      "SELECT employees.role_id, roles.title FROM roles JOIN employees USING (id)";
     const allRoles = [];
     connection.query(roleQuery, (err, res) => {
       if (err) throw err;
-      res.forEach(({ title }, i) => {
+      // console.log(res);
+      res.forEach(({ role_id, title }, i) => {
         i++;
-        allRoles.push(`${title}`);
+        allRoles.push(`${role_id} ${title}`);
       });
     });
 
@@ -252,23 +254,35 @@ const addEmp = () => {
         },
       ])
       .then((answers) => {
-        const mgrID = mgrList.filter((answers) => {
-          if ({ first_name } + { last_name } === answers.empMgr) {
-            return mgrList.id;
+        let newEmpID;
+        mgrList.filter((emp) => {
+          if (emp === answers.empMgr) {
+            newEmpID = emp.split(" ")[0];
+            return newEmpID;
           }
-          console.log(mgrID);
         });
+        // console.log("Line 262", newEmpID);
+        let newEmpRole;
+        allRoles.filter((rle) => {
+          if (rle === answers.empRole) {
+            newEmpRole = rle.split(" ")[0];
+            return newEmpRole;
+          }
+        });
+        console.log(newEmpRole);
         connection.query(
           "INSERT INTO employees SET ?",
           {
             first_name: answers.empFirstName,
-            last_name: answer.empLastName,
-            role_id: "",
-            manager_id: "",
+            last_name: answers.empLastName,
+            role_id: newEmpRole,
+            manager_id: newEmpID,
           },
           (err, res) => {
             if (err) throw err;
-            console.log(`${answer.newRole} was successfully added`);
+            console.log(
+              `${answers.empFirstName} ${answers.empLastName} was successfully added`
+            );
             start();
           }
         );

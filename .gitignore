@@ -1,4 +1,6 @@
 .DS_Store/
 node_modules/
 pwd.js
-main 
+view.js
+connection.js
+start.js
