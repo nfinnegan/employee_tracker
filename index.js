@@ -216,31 +216,63 @@ const addEmp = () => {
       i++;
       mgrList.push(`${first_name} ${last_name}`);
     });
+    let roleQuery = "SELECT * FROM roles";
+    const allRoles = [];
+    connection.query(roleQuery, (err, res) => {
+      if (err) throw err;
+      res.forEach(({ title }, i) => {
+        i++;
+        allRoles.push(`${title}`);
+      });
+    });
 
-    inquirer.prompt([
-      {
-        type: "input",
-        name: "empFirstName",
-        message: "What is the employee's first name?",
-      },
-      {
-        type: "input",
-        name: "empLastName",
-        message: "What is the employee's last name?",
-      },
-      {
-        type: "list",
-        name: "empRole",
-        message: "What is the employee's role?",
-        choices: ["test", "test"],
-      },
-      {
-        type: "list",
-        name: "empMgr",
-        message: "Who is the employee's manager?",
-        choices: mgrList,
-      },
-    ]);
+    inquirer
+      .prompt([
+        {
+          type: "input",
+          name: "empFirstName",
+          message: "What is the employee's first name?",
+        },
+        {
+          type: "input",
+          name: "empLastName",
+          message: "What is the employee's last name?",
+        },
+        {
+          type: "list",
+          name: "empRole",
+          message: "What is the employee's role?",
+          choices: allRoles,
+        },
+        {
+          type: "list",
+          name: "empMgr",
+          message: "Who is the employee's manager?",
+          choices: mgrList,
+        },
+      ])
+      .then((answers) => {
+        const mgrID = mgrList.filter((answers) => {
+          if ({ first_name } + { last_name } === answers.empMgr) {
+            return mgrList.id;
+          }
+          console.log(mgrID);
+        });
+        connection.query(
+          "INSERT INTO employees SET ?",
+          {
+            first_name: answers.empFirstName,
+            last_name: answer.empLastName,
+            role_id: "",
+            manager_id: "",
+          },
+          (err, res) => {
+            if (err) throw err;
+            console.log(`${answer.newRole} was successfully added`);
+            start();
+          }
+        );
+      });
   });
 };
 
