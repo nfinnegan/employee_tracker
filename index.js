@@ -105,7 +105,7 @@ const viewAllEmpByDept = () => {
 
 const viewAllEmpByRoles = () => {
   connection.query(
-    "SELECT employees.id, employees.first_name, employees.last_name, roles.title AS role, roles.salary FROM employees JOIN roles USING (id)",
+    "SELECT employees.id, employees.first_name, employees.last_name, roles.title AS role, roles.salary FROM employees JOIN roles ON employees.role_id = roles.id",
     (err, res) => {
       if (err) throw err;
       // Log all results of the SELECT statement
