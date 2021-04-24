@@ -157,7 +157,6 @@ const updateEmpRole = () => {
         .then((answers) => {
           //console.log(answers.empChoice);
           let lastName = answers.empChoice.split(" ")[1];
-          console.log(lastName);
           let updatedRole;
           roleList.filter((rle) => {
             if (rle === answers.role) {
@@ -165,7 +164,6 @@ const updateEmpRole = () => {
               return updatedRole;
             }
           });
-          console.log(updatedRole);
           connection.query(
             "UPDATE employees SET ? WHERE ?",
             [
@@ -250,15 +248,14 @@ const addEmp = () => {
       i++;
       mgrList.push(`${id} ${first_name} ${last_name}`);
     });
-    let roleQuery =
-      "SELECT employees.role_id, roles.title FROM roles JOIN employees USING (id)";
+    let roleQuery = "SELECT roles.id, roles.title FROM roles";
     const allRoles = [];
     connection.query(roleQuery, (err, res) => {
       if (err) throw err;
       // console.log(res);
-      res.forEach(({ role_id, title }, i) => {
+      res.forEach(({ id, title }, i) => {
         i++;
-        allRoles.push(`${role_id} ${title}`);
+        allRoles.push(`${id} ${title}`);
       });
     });
 
@@ -303,7 +300,7 @@ const addEmp = () => {
             return newEmpRole;
           }
         });
-        console.log(newEmpRole);
+        //console.log(newEmpRole);
         connection.query(
           "INSERT INTO employees SET ?",
           {
