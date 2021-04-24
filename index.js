@@ -78,9 +78,9 @@ const start = () => {
 
 const viewAllEmp = () => {
   connection.query(
-    `SELECT employees.id, employees.first_name, employees.last_name, roles.title, department.dept_name, roles.salary, CONCAT(m.first_name,' ',m.last_name) AS manager FROM employees
+    `SELECT employees.id, employees.first_name, employees.last_name, roles.title, roles.salary, CONCAT(m.first_name,' ',m.last_name) AS manager FROM employees
     JOIN department USING (id)
-    JOIN roles USING (id)
+    LEFT JOIN roles ON employees.role_id = roles.id
     LEFT JOIN employees AS m ON employees.manager_id = m.id`,
     (err, res) => {
       if (err) throw err;
@@ -155,6 +155,9 @@ const updateEmpRole = () => {
           },
         ])
         .then((answers) => {
+          //console.log(answers.empChoice);
+          let lastName = answers.empChoice.split(" ")[1];
+          console.log(lastName);
           let updatedRole;
           roleList.filter((rle) => {
             if (rle === answers.role) {
@@ -163,10 +166,15 @@ const updateEmpRole = () => {
             }
           });
           connection.query(
-            "UPDATE employees SET ?",
-            {
-              role_id: updatedRole,
-            },
+            "UPDATE employees SET ? WHERE ?",
+            [
+              {
+                role_id: updatedRole,
+              },
+              {
+                last_name: lastName,
+              },
+            ],
             (err, res) => {
               if (err) throw err;
               console.log(`${answers.empChoice} was successfully updated`);
