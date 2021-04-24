@@ -128,13 +128,13 @@ const updateEmpRole = () => {
       });
 
       connection.query(
-        "SELECT employees.role_id, roles.title FROM roles JOIN employees USING (id)",
+        "SELECT roles.id, roles.title FROM roles",
         (err, res) => {
           if (err) throw err;
           // console.log(res);
-          res.forEach(({ role_id, title }, i) => {
+          res.forEach(({ id, title }, i) => {
             i++;
-            roleList.push(`${role_id} ${title}`);
+            roleList.push(`${id} ${title}`);
           });
         }
       );
@@ -165,6 +165,7 @@ const updateEmpRole = () => {
               return updatedRole;
             }
           });
+          console.log(updatedRole);
           connection.query(
             "UPDATE employees SET ? WHERE ?",
             [
