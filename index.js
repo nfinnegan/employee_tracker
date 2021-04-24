@@ -119,17 +119,25 @@ const updateEmpRole = () => {
   const empList = [];
   const roleList = [];
   connection.query(
-    "SELECT CONCAT(employees.first_name, ' ', employees.last_name) AS full_name, roles.title AS role FROM employees JOIN roles USING (id)",
+    "SELECT CONCAT(employees.first_name, ' ', employees.last_name) AS full_name, roles.title AS role FROM employees LEFT JOIN roles ON employees.role_id = roles.id",
     (err, res) => {
       if (err) throw err;
       console.table(res);
       res.forEach((employee) => {
         empList.push(employee.full_name);
       });
-      res.forEach((roles) => {
-        console.log(roles);
-        roleList.push(roles.role);
-      });
+
+      connection.query(
+        "SELECT employees.role_id, roles.title FROM roles JOIN employees USING (id)",
+        (err, res) => {
+          if (err) throw err;
+          // console.log(res);
+          res.forEach(({ role_id, title }, i) => {
+            i++;
+            roleList.push(`${role_id} ${title}`);
+          });
+        }
+      );
 
       inquirer
         .prompt([
@@ -147,7 +155,24 @@ const updateEmpRole = () => {
           },
         ])
         .then((answers) => {
-          connection.query();
+          let updatedRole;
+          roleList.filter((rle) => {
+            if (rle === answers.role) {
+              updatedRole = rle.split(" ")[0];
+              return updatedRole;
+            }
+          });
+          connection.query(
+            "UPDATE employees SET ?",
+            {
+              role_id: updatedRole,
+            },
+            (err, res) => {
+              if (err) throw err;
+              console.log(`${answers.empChoice} was successfully updated`);
+              start();
+            }
+          );
         });
     }
   );
