@@ -118,7 +118,7 @@ const viewAllEmpByRoles = () => {
 const updateEmpRole = () => {
   //declare empty array to put each employee in once the query runs to be used in the choices list for the inquirer prompt
   const empList = [];
-  //declare empty array to put each role in oce the query runs to be used in the choices list for the inquirer prompt
+  //declare empty array to put each role in once the query runs to be used in the choices list for the inquirer prompt
   const roleList = [];
   connection.query(
     "SELECT CONCAT(employees.first_name, ' ', employees.last_name) AS full_name, roles.title AS role FROM employees LEFT JOIN roles ON employees.role_id = roles.id",
@@ -164,7 +164,7 @@ const updateEmpRole = () => {
           let lastName = answers.empChoice.split(" ")[1];
 
           let updatedRole;
-          //filter through each element in the role list array, if the it matches the user input execute the code block in the if statement
+          //filter through each element in the role list array, if the role/id match the user input execute the code block in the if statement
           roleList.filter((rle) => {
             if (rle === answers.role) {
               //split off the role ID that was pushed into the roleList array so that we can update the employee,
@@ -173,7 +173,7 @@ const updateEmpRole = () => {
               return updatedRole;
             }
           });
-          //updating employee role in the database
+          //updating employee role in the database by last name
           connection.query(
             "UPDATE employees SET ? WHERE ?",
             [
@@ -254,7 +254,7 @@ const addDept = () => {
 //adding new employee
 const addEmp = () => {
   let mgrQuery = "SELECT * FROM employees";
-  //empty array declared to put every employee/id into once query is run
+  //empty array declared to put every employees first name/last name/id into once query is run
   const mgrList = [];
   connection.query(mgrQuery, (err, res) => {
     if (err) throw err;
@@ -270,7 +270,7 @@ const addEmp = () => {
     const allRoles = [];
     connection.query(roleQuery, (err, res) => {
       if (err) throw err;
-      //for each element in roleQuery, take id & title and push it into the empty allRoles array
+      //for each element in roleQuery, deconstruct id & title and push it into the empty allRoles array
       //to be displayed in choices for inquirer prompt
       res.forEach(({ id, title }, i) => {
         i++;
